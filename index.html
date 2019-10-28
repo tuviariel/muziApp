@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html ng-app="muzi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/angular-local-storage.min.js"></script>
+
+    <script src="app.js"></script>
+    <script src="Controllers/mainController.js"></script>
+    <script src="Services/LocalStorageSrevice.js"></script>
+    <script src="Services/HttpService.js"></script>
+
+    <title>Recipe Angular App</title>
+</head>
+
+<body>
+    <div ng-controller="mainController">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center sticky-top">
+            <ul class="navbar-nav">
+                <li>
+                    <h4>
+                        <a class="navbar-nav nav-link" ng-click="home()">
+                            <i class="glyphicon glyphicon-home"></i> Recipe <br /> AngularJS <br /> Application
+                        </a>
+                    </h4>
+                </li>
+                <li>
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="text" ng-model="search" placeholder="Search for Recipe:" name="search">
+                        <button class="btn btn-success" type="submit" ng-click="mySearch()"><i class="glyphicon glyphicon-search"></i>Search</button>
+                    </form><br />
+                    <h1 style="color:wheat">{{titles}}</h1>
+                </li>
+                <li>
+                    <select ng-model="selectedRecipe" ng-options="x for x in favorites_title" ng-click="myFavorites()"></select>
+                </li>
+                <li>
+                    <h2 style="color:yellow; align-self:end">My Favorites ({{amount}})<i class="glyphicon glyphicon-flag"></i></h2><br />
+                    <h2 style="color:lightpink" align-self:end">{{messages}}</h2>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <div class="jumbotron">
+                
+
+            <!--Favorite recipe show-->
+            <div ng-show="favoriteRecipe" class="row mt-auto">
+                <div class="col-md-7">
+                    <div class="card" style="width:500px">
+                        <a href="{{f2f}}"><img src="{{ima}}" alt="{{f2f}}" style="width:500px;height:500px"></a>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card" style="width:300px">
+                        <a href="{{f2f}}"><h2>{{tit}}</h2></a><br />
+                        <h4>Ranked {{soc}}% by our Costomers</h4><br />
+                        <h4>By <a href="{{pub}}" target="_blank">{{pub}}</a> (Also Found <a href="{{pub_url}}" target="_blank">Here)</a></h4>
+                    </div>
+                </div>
+            </div>
+
+            <!--Search show-->
+            
+            <div class="row mt-5" ng-show="searchResult">
+                <div ng-repeat="x in searchRecipes">
+                    <div class="col-md-4">
+                        <!--Card-->
+                        <div class="card" style="width:295px">
+                            <!--Card image-->
+                            <img class="img-fluid img-thumbnail mx-auto d-block" ng-src="{{x.image_url}}" alt="{{x.f2f_url}}" style="width:290px;height:290px;">
+                            <!--Card content-->
+                            <div class="card-body">
+                                <!--Title-->
+                                <h4 class="card-title"><a href="{{x.f2f_url}}" target="_blank">{{x.title}}</a></h4>
+                                <!--Text-->
+                                <p class="card-text"><h4>by <a href="{{x.source_url}}" alt="{{x.f2f_url}}" target="_blank">{{x.publisher}}</a></h4></p>
+                                <a class="btn btn-outline-primary" ng-click="saveFavorites(x.title, x.f2f_url)">
+                                    <span class="glyphicon glyphicon-flag"></span>Save to Favorites list
+                                </a>
+                                <h3><span class="badge badge-pill badge-success">(Rank is {{x.social_rank | limitTo : 4}}%)</span></h3>
+                            </div>
+                        </div>
+                        <!--Card-->
+                    </div>
+                </div>
+            </div>
+            
+            <!--Main show-->
+
+            <div class="row mt-5" ng-show="mainBrowse">
+                <div ng-repeat="x in recipes">
+                    <div class="col-md-4">
+                        <!--Card-->
+                        <div class="card" style="width:295px">
+                            <!--Card image-->
+                            <img class="img-fluid img-thumbnail mx-auto d-block" ng-src="{{x.image_url}}" alt="{{x.f2f_url}}" style="width:290px;height:290px;">
+                            <!--Card content-->
+                            <div class="card-body">
+                                <!--Title-->
+                                <h4 class="card-title"><a href="{{x.f2f_url}}" target="_blank">{{x.title}}</a></h4>
+                                <!--Text-->
+                                <p class="card-text"><h4>by <a href="{{x.source_url}}" alt="{{x.f2f_url}}" target="_blank">{{x.publisher}}</a></h4></p>
+                                <a class="btn btn-outline-primary" ng-click="saveFavorites(x.title, x.f2f_url)">
+                                    <span class="glyphicon glyphicon-flag"></span>Save to Favorites list
+                                </a>
+                                <h3><span class="badge badge-pill badge-success">(Rank is {{x.social_rank | limitTo : 4}}%)</span></h3>
+                            </div>
+                        </div>
+                        <!--Card-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</body>
+</html>
